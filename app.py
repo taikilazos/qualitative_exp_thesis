@@ -36,6 +36,9 @@ if 'ratings' not in st.session_state:
 if 'version_mapping' not in st.session_state:
     st.session_state.version_mapping = {}
 
+if 'action_ratings' not in st.session_state:
+    st.session_state.action_ratings = {}
+
 # Initialize version mapping and ratings for all abstracts
 for abstract_key in abstracts.keys():
     if abstract_key not in st.session_state.version_mapping:
@@ -48,6 +51,12 @@ for abstract_key in abstracts.keys():
     
     if abstract_key not in st.session_state.ratings:
         st.session_state.ratings[abstract_key] = {}
+
+# Initialize ratings for all action tasks
+action_tasks = data.get('action_based_tasks', {})
+for task_key in action_tasks.keys():
+    if task_key not in st.session_state.action_ratings:
+        st.session_state.action_ratings[task_key] = {}
 
 # Display each abstract consecutively
 for abstract_key, abstract_data in abstracts.items():
@@ -119,10 +128,69 @@ for abstract_key, abstract_data in abstracts.items():
     
     st.divider()
 
+# Action-based tasks
+st.header("📝 Action-based Task Rating")
+for task_key, task_data in action_tasks.items():
+    st.subheader(f"🧩 {task_data['title']}")
+
+    st.markdown("**Prompt Instructions:**")
+    st.text_area(
+        "", 
+        task_data['prompt_instructions'], 
+        height=150, 
+        disabled=True,
+        key=f"instructions_{task_key}"
+    )
+
+    st.markdown("**Text to Simplify:**")
+    st.text_area(
+        "", 
+        task_data['text_to_simplify'], 
+        height=100, 
+        disabled=True,
+        key=f"text_{task_key}"
+    )
+
+    st.markdown("**Output:**")
+    st.text_area(
+        "", 
+        task_data['output'], 
+        height=100, 
+        disabled=True,
+        key=f"output_{task_key}"
+    )
+
+    # Rating system
+    st.write("Rate how well the output follows the prompt (1-5):")
+    current_rating = st.session_state.action_ratings.get(task_key, None)
+    
+    # Create rating buttons in a single row
+    rating_cols = st.columns(5)
+    for rating in range(1, 6):
+        with rating_cols[rating-1]:
+            if st.button(
+                str(rating), 
+                key=f"{task_key}_{rating}",
+                type="primary" if current_rating == rating else "secondary"
+            ):
+                st.session_state.action_ratings[task_key] = rating
+                st.rerun()
+    
+    # Display current rating
+    if current_rating:
+        st.write(f"Your rating: {current_rating} ⭐")
+
+    st.divider()
+
 # Overall progress summary
 st.header("📊 Overall Progress")
-total_possible_ratings = len(abstracts) * 5
-total_submitted_ratings = sum(len(ratings) for ratings in st.session_state.ratings.values())
+total_abstract_ratings = len(abstracts) * 5
+total_action_ratings = len(action_tasks)
+total_possible_ratings = total_abstract_ratings + total_action_ratings
+
+submitted_abstract_ratings = sum(len(ratings) for ratings in st.session_state.ratings.values())
+submitted_action_ratings = sum(1 for r in st.session_state.action_ratings.values() if r is not None)
+total_submitted_ratings = submitted_abstract_ratings + submitted_action_ratings
 
 progress = total_submitted_ratings / total_possible_ratings if total_possible_ratings > 0 else 0
 st.progress(progress)
@@ -143,14 +211,15 @@ for i, (abstract_key, abstract_data) in enumerate(abstracts.items()):
 # Export ratings button
 st.header("💾 Export Results")
 if st.button("Export All Ratings", type="primary"):
-    if any(st.session_state.ratings.values()):
+    if any(st.session_state.ratings.values()) or any(st.session_state.action_ratings.values()):
         # Create comprehensive export data
         export_data = {
             "total_ratings": total_submitted_ratings,
             "total_possible": total_possible_ratings,
             "completion_percentage": progress,
             "timestamp": str(st.session_state.get('timestamp', 'unknown')),
-            "abstracts": {}
+            "abstracts": {},
+            "action_based_tasks": {}
         }
         
         for abstract_key, abstract_data in abstracts.items():
@@ -169,6 +238,13 @@ if st.button("Export All Ratings", type="primary"):
                 },
                 "completion": f"{len(abstract_ratings)}/5",
                 "completion_percentage": (len(abstract_ratings)/5)*100
+            }
+
+        action_ratings = st.session_state.get('action_ratings', {})
+        for task_key, task_data in action_tasks.items():
+            export_data["action_based_tasks"][task_key] = {
+                "title": task_data['title'],
+                "rating": action_ratings.get(task_key)
             }
         
         st.download_button(
