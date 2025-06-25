@@ -56,7 +56,7 @@ for abstract_key in abstracts.keys():
 action_tasks = data.get('action_based_tasks', {})
 for task_key in action_tasks.keys():
     if task_key not in st.session_state.action_ratings:
-        st.session_state.action_ratings[task_key] = {}
+        st.session_state.action_ratings[task_key] = None
 
 # Display each abstract consecutively
 for abstract_key, abstract_data in abstracts.items():
