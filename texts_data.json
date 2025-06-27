@@ -37,19 +37,19 @@
   "action_based_tasks": {
     "task_1": {
       "title": "Action Task 1",
-      "prompt_instructions": "For each marked term in the sentence below, take the specified action:\n-postpartum: SUBSTITUTE -> after childbirth\n- incidence: SUBSTITUTE -> frequency\n- etiology: SUBSTITUTE -> cause\n- characteristics: SUBSTITUTE -> nature",
+      "prompt_instructions": "For each marked term in the sentence below, take the specified action:\n-postpartum: SUBSTITUTE\n- incidence: SUBSTITUTE\n- etiology: SUBSTITUTE\n- characteristics: SUBSTITUTE",
       "text_to_simplify": "Purpose: We sought to determine the incidence, etiology, characteristics and risk factors for all headaches in the first week postpartum.",
       "output": "We wanted to find out how often, what causes, the nature of, and danger signs for every headache during the 1st week after childbirth"
     },
     "task_2": {
       "title": "Action Task 2",
-      "prompt_instructions": "For each marked term in the sentence below, take the specified action:\n-tertiary-care: GENERALIZE -> medical",
+      "prompt_instructions": "For each marked term in the sentence below, take the specified action:\n-tertiary-care: GENERALIZE",
       "text_to_simplify": "Methods: This was a prospective cohort study of 985 women delivering over a three-month period in a single tertiary-care institution.",
       "output": "This was a future-looking group research project on 985 females giving birth during an entire quarter at just one hospital that provides advanced care for serious health problems."
     },
     "task_3": {
       "title": "Action Task 3",
-      "prompt_instructions": "For each marked term in the sentence below, take the specified action:\n- postpartum: SUBSTITUTE -> after childbirth\n- demographic data: GENERALIZE -> demographic information\n- characteristics: SUBSTITUTE -> nature\n- postpartum headache: EXPLAIN -> after birth\n- PPHa: SUBSTITUTE -> headache",
+      "prompt_instructions": "For each marked term in the sentence below, take the specified action:\n- postpartum: SUBSTITUTE\n- demographic data: GENERALIZE\n- characteristics: SUBSTITUTE\n- postpartum headache: EXPLAIN\n- PPHa: SUBSTITUTE",
       "text_to_simplify": "These women underwent a structured interview and follow-up to collect demographic data and to assess for the presence and characteristics of postpartum headache (PPHa) or neck/shoulder pain.",
       "output": "These women had interviews and check-ups afterwards to gather demographic information about them and find out whether they experienced any headaches or shoulder pains during their recovery from giving birth."
     },
@@ -61,7 +61,7 @@
     },
     "task_5": {
       "title": "Action Task 5",
-      "prompt_instructions": "For each marked term in the sentence below, take the specified action:\n- Multivariate analysis: GENERALIZE -> statistical analysis",
+      "prompt_instructions": "For each marked term in the sentence below, take the specified action:\n- Multivariate analysis: GENERALIZE",
       "text_to_simplify": "Multivariate analysis was used to examine possible risk factors.",
       "output": "Statistical analysis was done to look at potential risks."
     }
